@@ -1,5 +1,4 @@
 import express from  'express';
-import logger from 'morgan';
 import {config} from "dotenv";
 import cors from "cors";
 
@@ -11,12 +10,11 @@ import authenticator from "./middleware/authenticator.js";
 config();
 
 const app = express();
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const allowedOrigins = {
-    origin: "http://localhost:5173"
+    origin: process.env.ALLOWED_ORIGIN
 }
 app.use(cors(allowedOrigins));
 
