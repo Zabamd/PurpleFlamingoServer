@@ -1,7 +1,7 @@
-class Action {
-  constructor(title, creator, startDate, endDate, currentAmount, goalAmount) {
+export default class Action {
+  constructor(title, creatorId, startDate, endDate, currentAmount, goalAmount) {
     this.title = title;
-    this.creator = creator;
+    this.creatorId= creatorId;
     this.startDate = startDate;
     this.endDate = endDate;
     this.currentAmount = currentAmount;
@@ -9,5 +9,3 @@ class Action {
   }
   
 }
-
-export default Action;
