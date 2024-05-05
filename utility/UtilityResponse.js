@@ -3,7 +3,7 @@ export default class UtilityResponse {
     switch (code) {
       case 500:
         return {
-          message: "Can't establish db connection",
+          message: "Can't establish connection",
           status: "Internal server error",
           statusCode: 500,
         };

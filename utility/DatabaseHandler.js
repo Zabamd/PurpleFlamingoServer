@@ -1,7 +1,9 @@
 import { createConnection } from "mysql";
 import { config } from "dotenv";
+
 import UtilityResponse from "./UtilityResponse";
 
+//.env Config
 config();
 
 class DatabaseHandler {
@@ -34,7 +36,7 @@ class DatabaseHandler {
       return UtilityResponse.generateResponse(500);
     });
   };
-  
+
   static checkIfAccountExist = (email) => {
     const query = `SELECT * FROM user WHERE email=?`;
     const result = this.queryData(query, [email]);
@@ -46,12 +48,23 @@ class DatabaseHandler {
     const result = this.queryData(query, [email, password]);
     return result;
   };
-  
+
   static registerAccount = (userArray) => {
     const query = `INSERT INTO users (email,password,,username, firstName, secondName) VALUES (?, ?, ?, ?, ?)`;
     const result = this.queryData(query, [userArray]);
     return result;
-  }
+  };
+
+  static getUser = (userId) => {
+    const query = `SELECT * FROM user WHERE userId=?`;
+    const result = this.queryData(query, [userId]);
+    return result;
+  };
+  static updateData = (id, newValue) => {
+    const query = `UPDATE users SET password=? WHERE id=? `;
+    const result = this.queryData(query, [newValue, id]);
+    return result;
+  };
 }
 
 export default DatabaseHandler;

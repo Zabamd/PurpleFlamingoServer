@@ -31,4 +31,7 @@ export default class User {
       return DatabaseHandler.registerAccount(this.toArray());
     }
   };
+  changePassword = (newPassword) => {
+    return DatabaseHandler.updateData(this.userId, newPassword);
+  };
 }

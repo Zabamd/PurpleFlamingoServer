@@ -1,6 +1,5 @@
 import express from 'express';
 const router = express.Router();
-import Action from '../models/Action';
 
 router.get('/current_actions', function(req, res) {
     

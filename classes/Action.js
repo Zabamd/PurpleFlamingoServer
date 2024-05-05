@@ -12,4 +12,7 @@ export default class Action {
     this.status = status;
   }
   
+  getImages = () => {
+    queryActionImages(this.actionId);
+  }
 }
