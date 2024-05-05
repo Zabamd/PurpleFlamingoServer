@@ -1,11 +1,15 @@
 export default class Action {
-  constructor(title, creatorId, startDate, endDate, currentAmount, goalAmount) {
+  constructor(actionId, ownerId, title, startDate, finishDate, currentAmount, goalAmount, description, status) {
+    this.actionId = actionId;
+    this.ownerId = ownerId;
     this.title = title;
     this.creatorId= creatorId;
     this.startDate = startDate;
-    this.endDate = endDate;
+    this.finishDate = finishDate;
     this.currentAmount = currentAmount;
     this.goalAmount = goalAmount;
+    this.description = description;
+    this.status = status;
   }
   
 }
