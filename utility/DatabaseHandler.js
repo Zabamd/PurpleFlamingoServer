@@ -37,34 +37,6 @@ class DatabaseHandler {
     });
   };
 
-  static checkIfAccountExist = (email) => {
-    const query = `SELECT * FROM user WHERE email=?`;
-    const result = this.queryData(query, [email]);
-    return result.statusCode === 200;
-  };
-
-  static loginUser = (email, password) => {
-    const query = `SELECT * FROM user WHERE email=? AND password=?`;
-    const result = this.queryData(query, [email, password]);
-    return result;
-  };
-
-  static registerAccount = (userArray) => {
-    const query = `INSERT INTO users (email,password,,username, firstName, secondName) VALUES (?, ?, ?, ?, ?)`;
-    const result = this.queryData(query, [userArray]);
-    return result;
-  };
-
-  static getUser = (userId) => {
-    const query = `SELECT * FROM user WHERE userId=?`;
-    const result = this.queryData(query, [userId]);
-    return result;
-  };
-  static updateData = (id, newValue) => {
-    const query = `UPDATE users SET password=? WHERE id=? `;
-    const result = this.queryData(query, [newValue, id]);
-    return result;
-  };
 }
 
 export default DatabaseHandler;

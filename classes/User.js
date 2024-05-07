@@ -1,37 +1,46 @@
 import DatabaseHandler from "../utility/DatabaseHandler";
-import UtilityResponse from "../utility/UtilityResponse";
 
 export default class User {
-  constructor(userId, email, username, firstName, password) {
-    this.userId = userId || null;
+  constructor(email, password, username, firstName, secondName, userId) {
+    this.userId = userId;
     this.email = email;
     this.password = password;
-    this.username = username || null;
-    this.firstName = firstName || null;
-    this.secondName = secondName || null;
+    this.username = username;
+    this.firstName = firstName;
+    this.secondName = secondName;
   }
+  checkIfAccountExist = () => {
+    const query = `SELECT * FROM user WHERE email=?`;
+    const result = DatabaseHandler.queryData(query, [this.email]);
+    return result.statusCode === 200;
+  };
 
-  toArray = () => {
-    return [
+  loginUser = () => {
+    const query = `SELECT * FROM user WHERE email=? AND password=?`;
+    const result = DatabaseHandler.queryData(query, [
       this.email,
       this.password,
-      this.username,
-      this.firstName,
-      this.secondName,
-    ];
+    ]);
+    return result;
   };
-  loginAuth = () => {
-    return DatabaseHandler.loginUser(this.email, this.password);
-  };
+
   registerAccount = () => {
-    if (DatabaseHandler.checkIfAccountExist(this.email)) {
-      //Email olready in use
-      return UtilityResponse.generateResponse(380);
-    } else {
-      return DatabaseHandler.registerAccount(this.toArray());
-    }
+    const query = `INSERT INTO users (email,password,,username, firstName, secondName) VALUES (?, ?, ?, ?, ?)`;
+    const result = DatabaseHandler.queryData(query, [this.toArray()]);
+    return result;
+  };
+
+  getUser = () => {
+    const query = `SELECT * FROM user WHERE userId=?`;
+    const result = DatabaseHandler.queryData(query, [this.userId]);
+    return result;
   };
   changePassword = (newPassword) => {
-    return DatabaseHandler.updateData(this.userId, newPassword);
+    const query = `UPDATE users SET password=? WHERE email=? `;
+    const result = DatabaseHandler.queryData(query, [
+      newPassword,
+      this.email,
+    ]);
+    return result;
   };
 }
