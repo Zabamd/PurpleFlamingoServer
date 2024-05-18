@@ -1,9 +1,9 @@
-import express from "express";
-import UtilityResponse from "../utility/UtilityResponse.js";
-import User from "../classes/User.js";
+const express = require("express");
+const UtilityResponse = require("../utility/UtilityResponse");
+const User = require("../classes/User");
 const router = express.Router();
 
-router.get("/admin/login", function (req, res) {
+router.post("/admin/login", function (req, res) {
   const { reqEmail, reqPassword } = req.body;
 
   if (!reqEmail || !reqPassword) {
@@ -14,12 +14,12 @@ router.get("/admin/login", function (req, res) {
   return res.status(dbResponse.statusCode).json(dbResponse);
 });
 
-router.get("/admin/register", function (req, res) {
-  const { email, password, username, firstName, secondName } = req.body;
+router.post("/admin/register", function (req, res) {
+  const { email, password, username, firstName, secondName, birthday } = req.body;
   const dbResponse = "";
-  const user = new User(email, password, username, firstName, secondName);
+  const user = new User(email, password, username, firstName, secondName, birthday);
 
-  if (!email || !password || !username || !firstName || !secondName) {
+  if (!email || !password || !username || !firstName || !secondName, !birthday) {
     return res.status(400).json(UtilityResponse.generateResponse(400));
   }
 
@@ -33,6 +33,7 @@ router.get("/admin/register", function (req, res) {
       username,
       firstName,
       secondName,
+      birthday
     ]);
   }
   return res.status(dbResponse.statusCode).json(dbResponse);
@@ -66,4 +67,4 @@ router.put("/admin/changePassword", function (req, res) {
   return res.status(dbResponse.statusCode).json(dbResponse);
 });
 
-export default router;
+module.exports = router;

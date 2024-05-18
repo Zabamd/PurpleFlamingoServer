@@ -1,20 +1,19 @@
-import { createConnection } from "mysql";
-import { config } from "dotenv";
-
-import UtilityResponse from "./UtilityResponse";
+const { createConnection } = require("mysql");
+const { config } = require("dotenv");
+const UtilityResponse = require("./UtilityResponse");
 
 //.env Config
 config();
 
 class DatabaseHandler {
-  #connectionEndpoint = {
+  static #connectionEndpoint = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB,
   };
 
-  queryData = (sqlQuery, valueArray) => {
+  static queryData = (sqlQuery, valueArray) => {
     const connection = createConnection(this.#connectionEndpoint);
 
     connection.connect((error) => {
@@ -36,7 +35,5 @@ class DatabaseHandler {
       return UtilityResponse.generateResponse(500);
     });
   };
-
 }
-
-export default DatabaseHandler;
+module.exports = DatabaseHandler;

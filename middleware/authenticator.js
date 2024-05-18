@@ -1,16 +1,13 @@
 const authenticator = (req, res, next) => {
-  const authKey = req.headers["authToken"];
+  const authKey = req.headers.authtoken;
   if (authKey === process.env.AUTH_TOKEN) {
-    next();
+    return next();
   }
-  return res
-    .status(401)
-    .end(
-      JSON.stringify({
-        status: "UNAUTHORIZED",
-        message: "Incorrect authentication key",
-      })
-    );
+  res.status(401).end(
+    JSON.stringify({
+      status: "UNAUTHORIZED",
+      message: "Incorrect authentication key",
+    })
+  );
 };
-
-export default authenticator;
+module.exports = authenticator;

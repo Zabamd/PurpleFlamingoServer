@@ -1,8 +1,7 @@
 {
   "name": "purpleflamingoserver",
   "version": "0.0.0",
-  "private": true,
-  "type": "module",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },

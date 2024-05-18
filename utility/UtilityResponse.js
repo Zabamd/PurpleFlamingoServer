@@ -1,4 +1,4 @@
-export default class UtilityResponse {
+class UtilityResponse {
   static generateResponse = (code, result = null) => {
     switch (code) {
       case 500:
@@ -39,3 +39,5 @@ export default class UtilityResponse {
     }
   };
 }
+
+module.exports = UtilityResponse

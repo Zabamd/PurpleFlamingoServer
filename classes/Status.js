@@ -1,5 +1,5 @@
 /* Enum pattern for action status */
-export default class Status {
+class Status {
   static active = new Status("active");
   static closed = new Status("closed");
   static staged = new Status("staged");
@@ -11,3 +11,4 @@ export default class Status {
     return `${this.name}`;
   }
 }
+module.exports = Status;

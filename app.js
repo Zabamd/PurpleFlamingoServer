@@ -1,27 +1,30 @@
-import express from "express";
-import { config } from "dotenv";
-import cors from "cors";
+const express = require("express");
+const { config } = require("dotenv");
+const cors = require("cors");
 
-import indexRouter from "./routes/index.js";
-import emailRouter from "./routes/email.js";
-import actionsRouter from "./routes/actions.js";
-import usersRouter from "./routes/users.js";
+const indexRouter = require("./routes/index");
+const emailRouter = require("./routes/email");
+const actionsRouter = require("./routes/actions");
+const usersRouter = require("./routes/users");
 
-import authenticator from "./middleware/authenticator.js";
+const authenticator = require("./middleware/authenticator");
 
-//.env Config
+// .env Config
 config();
+
 const allowedOrigins = {
   origin: process.env.ALLOWED_ORIGIN,
 };
 
 const app = express();
-//Middlewares
+
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors(allowedOrigins));
+app.use(cors());
 app.use(authenticator);
-//Routes
+
+// Routes
 app.use("/", indexRouter);
 app.use("/email", emailRouter);
 app.use("/users", usersRouter);
@@ -32,4 +35,5 @@ const port = process.env.APP_PORT;
 app.listen(port, () => {
   console.log(`Listening on PORT ${port}`);
 });
-export default app;
+
+module.exports = app;

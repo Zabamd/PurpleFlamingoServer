@@ -1,14 +1,18 @@
-import DatabaseHandler from "../utility/DatabaseHandler";
-
-export default class User {
-  constructor(email, password, username, firstName, secondName, userId) {
+const DatabaseHandler = require("../utility/DatabaseHandler");
+class User {
+  constructor(email, password, username, firstName, secondName,  birthday, userId) {
     this.userId = userId;
     this.email = email;
     this.password = password;
     this.username = username;
     this.firstName = firstName;
     this.secondName = secondName;
+    this.birthday = birthday;
   }
+
+  toArray = () => {
+    return Object.values(this);
+  };
   checkIfAccountExist = () => {
     const query = `SELECT * FROM user WHERE email=?`;
     const result = DatabaseHandler.queryData(query, [this.email]);
@@ -25,7 +29,7 @@ export default class User {
   };
 
   registerAccount = () => {
-    const query = `INSERT INTO users (email,password,,username, firstName, secondName) VALUES (?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO users (email,password,,username, firstName, secondName, birthday) VALUES (?, ?, ?, ?, ?, ?)`;
     const result = DatabaseHandler.queryData(query, [this.toArray()]);
     return result;
   };
@@ -37,10 +41,8 @@ export default class User {
   };
   changePassword = (newPassword) => {
     const query = `UPDATE users SET password=? WHERE email=? `;
-    const result = DatabaseHandler.queryData(query, [
-      newPassword,
-      this.email,
-    ]);
+    const result = DatabaseHandler.queryData(query, [newPassword, this.email]);
     return result;
   };
 }
+module.exports = User;
