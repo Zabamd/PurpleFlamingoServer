@@ -3,67 +3,69 @@ const UtilityResponse = require("../utility/UtilityResponse");
 const User = require("../classes/User");
 const router = express.Router();
 
-router.post("/admin/login", function (req, res) {
-  const { reqEmail, reqPassword } = req.body;
+router.get("/admin/login", function (req, res) {
+  const { reqEmail, reqPassword } = req.query;
 
   if (!reqEmail || !reqPassword) {
     return res.status(400).json(UtilityResponse.generateResponse(400));
   }
   const user = new User(reqEmail, reqPassword);
-  const dbResponse = user.loginUser(reqEmail, reqPassword);
-  return res.status(dbResponse.statusCode).json(dbResponse);
+  const dbResponse = user.loginUser();
+  if (dbResponse.statusCode === 200) {
+    const userData = {
+      userId: dbResponse.userId,
+      username: dbResponse.username,
+    };
+    return res
+      .status(200)
+      .json(UtilityResponse.generateResponse(200, userData));
+  } else {
+    return res
+      .status(dbResponse.statusCode)
+      .json(UtilityResponse.generateResponse(dbResponse.statusCode));
+  }
 });
 
 router.post("/admin/register", function (req, res) {
-  const { email, password, username, firstName, secondName, birthday } = req.body;
+  const { email, password, username, firstName, secondName, birthday } =
+    req.body;
+  if (
+    (!email || !password || !username || !firstName || !secondName, !birthday)
+  ) {
+    return res.status(400).json(UtilityResponse.generateResponse(400));
+  }
   const dbResponse = "";
-  const user = new User(email, password, username, firstName, secondName, birthday);
-
-  if (!email || !password || !username || !firstName || !secondName, !birthday) {
-    return res.status(400).json(UtilityResponse.generateResponse(400));
-  }
-
-  if (user.checkIfAccountExist(email)) {
-    //Email olready in use
-    dbResponse = UtilityResponse.generateResponse(380);
-  } else {
-    dbResponse = user.registerAccount([
+  const user = new User(
+    email,
+    password,
+    username,
+    firstName,
+    secondName,
+    birthday,
+    null
+  );
+  dbResponse = user.registerAccount();
+  if (dbResponse.statusCode === 200) {
+    const userData = {
+      userId: dbResponse.userId,
       email,
-      password,
-      username,
-      firstName,
-      secondName,
-      birthday
-    ]);
+    };
+    return res
+      .status(200)
+      .json(UtilityResponse.generateResponse(200, userData));
+  } else {
+    return res
+      .status(dbResponse.statusCode)
+      .json(UtilityResponse.generateResponse(dbResponse.statusCode));
   }
-  return res.status(dbResponse.statusCode).json(dbResponse);
 });
 
-router.get("/admin/get/", function (req, res) {
-  const { email } = req.body;
-  if (!email) {
+router.get("/:userID", function (req, res) {
+  const { userID } = req.params.userID;
+  if (!userID) {
     return res.status(400).json(UtilityResponse.generateResponse(400));
   }
-  const user = new User(email);
-  const dbResponse = user.getUser(email);
-  return res.status(dbResponse.statusCode).json(dbResponse);
-});
-
-router.put("/admin/changePassword", function (req, res) {
-  const { email, oldPassword, newPassword } = req.body;
-
-  if (!oldPassword || !newPassword || !email) {
-    return res.status(400).json(UtilityResponse.generateResponse(400));
-  }
-
-  const user = new User(email, oldPassword);
-  const dbResponse = user.loginUser(email, oldPassword);
-
-  if (dbResponse.statusCode !== 200 || dbResponse.data === null) {
-    return res.status(dbResponse.statusCode).json(dbResponse);
-  }
-
-  dbResponse = user.changePassword(newPassword);
+  const dbResponse =  User.getUser(userID);
   return res.status(dbResponse.statusCode).json(dbResponse);
 });
 

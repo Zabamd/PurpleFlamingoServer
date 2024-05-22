@@ -1,5 +1,4 @@
 const DatabaseHandler = require("../utility/DatabaseHandler");
-
 const UtilityResponse = require("../utility/UtilityResponse");
 
 class Action {
@@ -13,7 +12,7 @@ class Action {
     goalAmount,
     description,
     status,
-    images = null
+    images
   ) {
     this.actionId = actionId;
     this.ownerId = ownerId;
@@ -28,17 +27,65 @@ class Action {
   }
   uploadAction = () => {
     let query =
-      "INSERT INTO action (ownerID, title, startDate, finishDate, currentAmount, goal, description, status) VALUES (?,?,?,?,?,?,?,?)";
-    const array = Object.values(this);
-    let result = DatabaseHandler.queryData(query, [array.slice(0, -1)]);
-    if (result.statusCode !== 200) {
-      return UtilityResponse.generateResponse(400);
+      "INSERT INTO action (ownerId, title, startDate, finishDate, currentAmount, goal, description, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    try {
+      const result = DatabaseHandler.queryData(query, [
+        this.ownerId,
+        this.title,
+        this.startDate,
+        this.finishDate,
+        this.currentAmount,
+        this.goal,
+        this.description,
+        this.status,
+      ]);
+      return UtilityResponse.generateResponse(200, result);
+    } catch (error) {
+      return UtilityResponse.generateResponse(500, error.message);
     }
   };
-  getImages = () => {
-    const query = "SELECT image FROM image WHERE actionID=?";
-    const result = DatabaseHandler.queryData(query, [this.actionId]);
-    return result;
+
+  static getUserActions = (ownerId) => {
+    const query = "SELECT * FROM action WHERE ownerID=?";
+    try {
+      const actionsResult = DatabaseHandler.queryData(query, [ownerId]);
+
+      if (actionsResult.length === 0) {
+        return UtilityResponse.generateResponse(
+          404,
+          "No actions found for this user"
+        );
+      }
+
+      const actions = [];
+      for (const actionRow of actionsResult) {
+        const imagesQuery = "SELECT image FROM image WHERE actionID=?";
+        const imagesResult = DatabaseHandler.queryData(imagesQuery, [
+          actionRow.actionId,
+        ]);
+
+        const images = imagesResult.map((imageRow) => imageRow.image);
+
+        const action = new Action(
+          actionRow.actionId,
+          actionRow.ownerId,
+          actionRow.title,
+          actionRow.startDate,
+          actionRow.finishDate,
+          actionRow.currentAmount,
+          actionRow.goal,
+          actionRow.description,
+          actionRow.status,
+          images
+        );
+
+        actions.push(action);
+      }
+
+      return UtilityResponse.generateResponse(200, actions);
+    } catch (error) {
+      return UtilityResponse.generateResponse(500, error.message);
+    }
   };
 }
 

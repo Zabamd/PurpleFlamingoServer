@@ -1,6 +1,14 @@
 const DatabaseHandler = require("../utility/DatabaseHandler");
 class User {
-  constructor(email, password, username, firstName, secondName,  birthday, userId) {
+  constructor(
+    email,
+    password,
+    username,
+    firstName,
+    secondName,
+    birthday,
+    userId
+  ) {
     this.userId = userId;
     this.email = email;
     this.password = password;
@@ -12,11 +20,6 @@ class User {
 
   toArray = () => {
     return Object.values(this);
-  };
-  checkIfAccountExist = () => {
-    const query = `SELECT * FROM user WHERE email=?`;
-    const result = DatabaseHandler.queryData(query, [this.email]);
-    return result.statusCode === 200;
   };
 
   loginUser = () => {
@@ -34,15 +37,27 @@ class User {
     return result;
   };
 
-  getUser = () => {
-    const query = `SELECT * FROM user WHERE userId=?`;
-    const result = DatabaseHandler.queryData(query, [this.userId]);
-    return result;
-  };
-  changePassword = (newPassword) => {
-    const query = `UPDATE users SET password=? WHERE email=? `;
-    const result = DatabaseHandler.queryData(query, [newPassword, this.email]);
-    return result;
+  static getUser = (userId) => {
+    const query = "SELECT * FROM user WHERE userId=?";
+    try {
+      const result = DatabaseHandler.queryData(query, [userId]);
+      if (result.length === 0) {
+        return UtilityResponse.generateResponse(404, "User not found");
+      }
+      const userRow = result[0];
+      const user = new User(
+        userRow.userId,
+        userRow.email,
+        userRow.password,
+        userRow.username,
+        userRow.firstName,
+        userRow.secondName,
+        userRow.birthday
+      );
+      return UtilityResponse.generateResponse(200, user);
+    } catch (error) {
+      return UtilityResponse.generateResponse(500);
+    }
   };
 }
 module.exports = User;

@@ -6,6 +6,7 @@ const indexRouter = require("./routes/index");
 const emailRouter = require("./routes/email");
 const actionsRouter = require("./routes/actions");
 const usersRouter = require("./routes/users");
+const transactionRouter = require("./routes/transaction");
 
 const authenticator = require("./middleware/authenticator");
 
@@ -29,6 +30,7 @@ app.use("/", indexRouter);
 app.use("/email", emailRouter);
 app.use("/users", usersRouter);
 app.use("/actions", actionsRouter);
+app.use("/transaction", transactionRouter);
 
 const port = process.env.APP_PORT;
 

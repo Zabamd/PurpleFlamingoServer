@@ -1,13 +1,6 @@
 class UtilityResponse {
   static generateResponse = (code, result = null) => {
     switch (code) {
-      case 500:
-        return {
-          message: "Can't establish connection",
-          status: "Internal server error",
-          data: null,
-          statusCode: 500,
-        };
       case 400:
         return {
           message: "Request without necessary data",
@@ -36,8 +29,16 @@ class UtilityResponse {
           statusCode: 200,
           status: "success",
         };
+      case 500:
+      default:
+        return {
+          message: "Can't establish connection",
+          status: "Internal server error",
+          data: null,
+          statusCode: 500,
+        };
     }
   };
 }
 
-module.exports = UtilityResponse
+module.exports = UtilityResponse;
